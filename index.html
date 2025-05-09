@@ -46,7 +46,7 @@
     .then(data => {
       L.geoJSON(data, {
         style: function (feature) {
-          return { color: 'blue', weight: 1 };
+          return { color: 'black', weight: 0.5 };
         },
         onEachFeature: function (feature, layer) {
           const tiefe = feature.properties.Tiefe || feature.properties.tiefe || feature.properties.depth;
