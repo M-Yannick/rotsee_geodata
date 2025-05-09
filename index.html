@@ -40,22 +40,31 @@
     attribution: '© Swisstopo'
   }).addTo(map);
 
-  // GeoJSON-Layer laden
-  fetch('isolines_rotsee.geojson')
-    .then(response => response.json())
-    .then(data => {
-      L.geoJSON(data, {
-        style: function (feature) {
-          return { color: 'black', weight: 0.5 };
-        },
-        onEachFeature: function (feature, layer) {
-          const tiefe = feature.properties.Tiefe || feature.properties.tiefe || feature.properties.depth;
-          if (tiefe !== undefined) {
-            layer.bindPopup("Tiefe: " + tiefe + " m");
-          }
+fetch('isolines_rotsee.geojson')
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: function (feature) {
+        return { color: 'black', weight: 0.3 };
+      },
+      onEachFeature: function (feature, layer) {
+        const tiefe = feature.properties.depth;
+        if (tiefe !== undefined) {
+          // Popup bei Klick
+          layer.bindPopup("Tiefe: " + tiefe + " m");
+
+          // Tooltip als dauerhaftes Label auf der Linie
+          layer.bindTooltip(tiefe + " m", {
+            permanent: true,
+            direction: 'center',
+            className: 'label-style'
+          });
         }
-      }).addTo(map);
-    });
+      }
+    }).addTo(map);
+  });
+
+
 
   // Standortanzeige aktivieren
   map.locate({setView: true, maxZoom: 16});
