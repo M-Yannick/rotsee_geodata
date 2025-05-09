@@ -17,17 +17,16 @@
   font-size: 8px;
   z-index: 1000;
 }
-.label-style {
+    .label-style {
   font-size: 11px;
   font-weight: bold;
   color: #003366;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
   padding: 2px 4px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  text-align: center;
-  white-space: nowrap;
 }
+
   </style>
 </head>
 <body>
@@ -54,34 +53,15 @@
 fetch('isolines_rotsee.geojson')
   .then(response => response.json())
   .then(data => {
-    const isolinienLayer = L.geoJSON(data, {
+    L.geoJSON(data, {
       style: function (feature) {
-        return { color: 'blue', weight: 1 };
+        return { color: 'black', weight: 0.3 };
       },
       onEachFeature: function (feature, layer) {
         const tiefe = feature.properties.depth;
         if (tiefe !== undefined) {
+          // Popup bei Klick
           layer.bindPopup("Tiefe: " + tiefe + " m");
-
-          // Zentrum der Linie berechnen (ungefähr)
-          const coords = layer.getBounds().getCenter();
-
-          // Textmarker als Label hinzufügen
-          L.marker(coords, {
-            icon: L.divIcon({
-              className: 'label-style',
-              html: tiefe + " m",
-              iconSize: [40, 12]
-            }),
-            interactive: false
-          }).addTo(map);
-        }
-      }
-    });
-
-    isolinienLayer.addTo(map);
-  });
-
 
           // Tooltip als dauerhaftes Label auf der Linie
           layer.bindTooltip(tiefe + " m", {
