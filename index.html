@@ -53,15 +53,34 @@
 fetch('isolines_rotsee.geojson')
   .then(response => response.json())
   .then(data => {
-    L.geoJSON(data, {
+    const isolinienLayer = L.geoJSON(data, {
       style: function (feature) {
-        return { color: 'black', weight: 0.3 };
+        return { color: 'blue', weight: 1 };
       },
       onEachFeature: function (feature, layer) {
         const tiefe = feature.properties.depth;
         if (tiefe !== undefined) {
-          // Popup bei Klick
           layer.bindPopup("Tiefe: " + tiefe + " m");
+
+          // Zentrum der Linie berechnen (ungefähr)
+          const coords = layer.getBounds().getCenter();
+
+          // Textmarker als Label hinzufügen
+          L.marker(coords, {
+            icon: L.divIcon({
+              className: 'label-style',
+              html: tiefe + " m",
+              iconSize: [40, 12]
+            }),
+            interactive: false
+          }).addTo(map);
+        }
+      }
+    });
+
+    isolinienLayer.addTo(map);
+  });
+
 
           // Tooltip als dauerhaftes Label auf der Linie
           layer.bindTooltip(tiefe + " m", {
